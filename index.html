@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medi-SB-World | Find Cheaper Medicines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal overflow */
+        }
+
+        /* Top Bar Styling */
+        .top-bar {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            overflow-x: auto; /* Allow horizontal scrolling if content overflows */
+        }
+
+        .top-bar .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Space between logo and brand name */
+        }
+
+        .top-bar .logo .file-logo {
+            width: 50px; /* Adjust size as needed */
+            height: 50px;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 2px solid #007BFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007BFF;
+            text-align: center;
+            line-height: 50px; /* Center text vertically */
+        }
+
+        .top-bar .logo .brand-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .top-bar .nav-items {
+            display: flex;
+            gap: 20px; /* Space between nav items */
+            align-items: center;
+            flex-wrap: nowrap; /* Prevent wrapping */
+        }
+
+        .top-bar .nav-items a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .top-bar .nav-items a:hover {
+            color: #cce4ff;
+            background-color: #0056b3;
+        }
+
+        /* Container Styling */
+        .container {
+            background-color: #fff;
+            max-width: 700px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 80px; /* Add margin to ensure content is below the fixed top bar */
+        }
+
+        /* Brand Name Styling */
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Input Box Styling */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Button Styling */
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Result Container Styling */
+        .result {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        /* Individual Medicine Item Styling */
+        .medicine-item {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .medicine-item strong {
+            color: #007BFF;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-selector button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .quantity-selector button:hover {
+            background-color: #0056b3;
+        }
+
+        .quantity-selector input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .buy-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: #218838;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            margin-bottom: 20px;
+            background-color: #007BFF;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 10px; /* Shift tabs slightly left */
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            color: #fff;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab:hover {
+            background-color: #0056b3;
+        }
+
+        .tab.active {
+            background-color: #0056b3;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Loading Spinner */
+        #loading {
+            display: none;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #007BFF;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input[type="text"],
+            button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo">
+            <div class="file-logo">SB</div>
+            <div class="brand-name">Medi-SB-World</div>
+        </div>
+        <div class="nav-items">
+            <a href="#">Express Delivery to</a>
+            <a href="#">Select Pincode</a>
+            <a href="#">Download App</a>
+            <a href="#">Hello, Log in</a>
+            <a href="#">Offers</a>
+            <a href="#">Cart</a>
+            <a href="#">Medicine</a>
+            <a href="#">Lab Tests</a>
+            <a href="#">Healthcare</a>
+            <a href="#">Health Blogs</a>
+            <a href="#">PLUS</a>
+            <a href="#">Offers</a>
+            <a href="#">Value Store</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('search')">Search</div>
+            <div class="tab" onclick="showTab('consultation')">Doctor Consultation</div>
+            <div class="tab" onclick="showTab('support')">Help & Support</div>
+            <div class="tab" onclick="showTab('upload')">Prescription Upload</div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="search" class="tab-content active">
+            <input type="text" id="medicineName" placeholder="Enter Medicine Name">
+            <button onclick="debouncedGetRecommendation()">Search</button>
+            <div id="loading">Loading...</div>
+            <div id="result" class="result"></div>
+        </div>
+        <div id="consultation" class="tab-content">
+            <h2>Consultation Content</h2>
+        </div>
+        <div id="support" class="tab-content">
+            <h2>Help & Support Content</h2>
+        </div>
+        <div id="upload" class="tab-content">
+            <h2>Prescription Upload Content</h2>
+        </div>
+    </div>
+
+    <script>
+        // Function to show the active tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Fetch recommendation with debouncing
+        let debounceTimeout;
+        function debouncedGetRecommendation() {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(getRecommendation, 300);
+        }
+
+        function getRecommendation() {
+            const medicineName = document.getElementById("medicineName").value;
+            if (medicineName.trim() === "") {
+                document.getElementById("result").innerHTML = "";
+                return;
+            }
+
+            const encodedMedicineName = encodeURIComponent(medicineName);
+            const url = `http://127.0.0.1:5001/recommend?medicine_name=${encodedMedicineName}`;
+            console.log("Fetching URL:", url); // Log the URL
+
+            document.getElementById("loading").style.display = "block"; // Show loading indicator
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = "";
+
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        let items = data.recommendations.map(item => `
+                            <div class="medicine-item animate__animated animate__fadeIn">
+                                <div>
+                                    <strong>Medicine:</strong> ${item.name} <br>
+                                    <strong>Price:</strong> ₹${item.price}
+                                </div>
+                                <div class="quantity-selector">
+                                    <button onclick="changeQuantity(this, -1)">-</button>
+                                    <input type="number" value="1" min="1" />
+                                    <button onclick="changeQuantity(this, 1)">+</button>
+                                </div>
+                                <button class="buy-button">Buy Now</button>
+                            </div>
+                        `).join('');
+                        resultDiv.innerHTML = items;
+                    } else {
+                        resultDiv.innerHTML = `<p>${data.error || data.message || 'No recommendations found.'}</p>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("result").innerText = "Error: " + error.message;
+                })
+                .finally(() => {
+                    document.getElementById("loading").style.display = "none"; // Hide loading indicator
+                });
+        }
+
+        function changeQuantity(button, delta) {
+            const input = button.parentElement.querySelector('input');
+            let quantity = parseInt(input.value);
+            quantity = Math.max(1, quantity + delta);
+            input.value = quantity;
+        }
+    </script>
+</body>
+
+</html>
